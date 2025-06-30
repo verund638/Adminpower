@@ -2,43 +2,46 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>MTC XUI Menü</title>
+  <title>ESP Menü</title>
 </head>
-<body style="background-color: #111; color: white; font-family: sans-serif;">
+<body style="background-color: #0f0f0f; color: white; font-family: sans-serif; text-align:center; padding-top:30px;">
 
-  <h1 style="text-align:center; padding-top:30px;">MTC Menü</h1>
+  <h1>MTC ESP MENÜ</h1>
+  <button id="espBtn">ESP ID GÖSTER</button>
 
-  <div style="display:flex; flex-direction:column; align-items:center; gap:20px; margin-top:40px;">
-    <button onclick="sendToLua('selam')">Selam</button>
-    <button onclick="sendToLua('aleyküm')">Aleyküm</button>
-    <button onclick="sendToLua('naber')">Naber</button>
-    <button onclick="sendToLua('esp id')">ESP ID</button>
-  </div>
+  <p id="result" style="margin-top:30px; font-size:20px; color:#00ffea;"></p>
 
   <script>
-    function sendToLua(message) {
+    document.getElementById("espBtn").addEventListener("click", () => {
       if (window.mtc && typeof window.mtc.trigger === 'function') {
-        mtc.trigger('FrontendToBackend', message);
-        console.log('Lua\'ya mesaj gönderildi:', message);
+        mtc.trigger("FrontendToBackend", "get_esp_id");
+        console.log("ESP ID isteği gönderildi.");
       } else {
-        console.warn('mtc.trigger tanımlı değil!');
+        console.warn("mtc.trigger fonksiyonu tanımlı değil.");
       }
-    }
+    });
+
+    // Lua'dan geri gelen cevap
+    window.addEventListener("message", (event) => {
+      if (event.data.type === "esp_id_response") {
+        document.getElementById("result").textContent = "Senin Oyuncu ID: " + event.data.playerId;
+        console.log("ID alındı:", event.data.playerId);
+      }
+    });
   </script>
 
   <style>
     button {
-      padding: 12px 24px;
-      font-size: 16px;
-      background: #e74c3c;
-      color: white;
+      padding: 14px 28px;
+      font-size: 18px;
+      background: #3498db;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
+      color: white;
       cursor: pointer;
-      transition: 0.2s;
     }
     button:hover {
-      background: #c0392b;
+      background: #2980b9;
     }
   </style>
 

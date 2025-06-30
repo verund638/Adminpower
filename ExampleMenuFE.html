@@ -1,22 +1,72 @@
-const newBtn = document.createElement('button');
-newBtn.textContent = 'Hello Gönder';
-newBtn.style = `
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #f44336;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    font-size: 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(244, 67, 54, 0.7);
-    z-index: 9999;
-`;
-document.body.appendChild(newBtn);
-newBtn.addEventListener('click', () => {
-    if(window.mtc && typeof mtc.trigger === 'function'){
-        mtc.trigger('FrontendToBackend', 'hello');
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<title>Adminpower MTC Menü</title>
+<style>
+    body {
+        background-color: #111;
+        color: #eee;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0; padding: 20px;
     }
-});
+    h1 {
+        color: #f44336;
+        margin-bottom: 30px;
+    }
+    #btnContainer {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        z-index: 9999;
+    }
+    button {
+        background-color: #f44336;
+        border: none;
+        padding: 12px 24px;
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(244, 67, 54, 0.7);
+        transition: background-color 0.3s ease;
+    }
+    button:hover {
+        background-color: #d32f2f;
+    }
+</style>
+</head>
+<body>
+
+<h1>Adminpower MTC Menü</h1>
+<p>Butonlara tıklayın, Lua tarafına mesaj gönderilir.</p>
+
+<div id="btnContainer">
+    <button data-msg="selam">Selam</button>
+    <button data-msg="aleyküm">Aleyküm</button>
+    <button data-msg="naber">Naber</button>
+    <button data-msg="hosgeldin">Hoşgeldin</button>
+</div>
+
+<script>
+    // Her butona tıklama olayını ayarla
+    const buttons = document.querySelectorAll('#btnContainer button');
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const mesaj = btn.getAttribute('data-msg');
+            if(window.mtc && typeof mtc.trigger === 'function') {
+                mtc.trigger('FrontendToBackend', mesaj);
+                console.log('Lua\'ya mesaj gönderildi: ' + mesaj);
+            } else {
+                console.warn('MTC trigger fonksiyonu bulunamadı!');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

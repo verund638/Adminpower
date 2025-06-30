@@ -1,22 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Example MTC UI</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adminpower Example Menu</title>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            background-color: #1f1f1f;
+            color: #eee;
+            font-family: Arial, sans-serif;
+        }
+        header {
+            background-color: #292929;
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #f44336;
+            text-align: center;
+        }
+        nav {
+            background-color: #222;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 0;
+        }
+        nav button {
+            background-color: #f44336;
+            border: none;
+            padding: 8px 16px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        nav button:hover {
+            background-color: #d32f2f;
+        }
+        main {
+            padding: 20px;
+        }
+        section {
+            display: none;
+        }
+        section.active {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    <h1>Orjinal Başlık</h1>
-    <button id="sendBtn">Backend'e Mesaj Gönder</button>
-
+    <header>Adminpower Example Menu</header>
+    <nav>
+        <button data-target="dashboard">Dashboard</button>
+        <button data-target="settings">Settings</button>
+        <button data-target="profile">Profile</button>
+    </nav>
+    <main>
+        <section id="dashboard" class="active">
+            <h2>Dashboard</h2>
+            <p>Welcome to the admin dashboard!</p>
+        </section>
+        <section id="settings">
+            <h2>Settings</h2>
+            <p>Manage your settings here.</p>
+        </section>
+        <section id="profile">
+            <h2>Profile</h2>
+            <p>View and edit your profile information.</p>
+        </section>
+    </main>
     <script>
-        // MTC executor frontend için örnek event göndermek
-        document.getElementById('sendBtn').addEventListener('click', function() {
+        // Sekmeli menü buton geçişleri
+        const buttons = document.querySelectorAll('nav button');
+        const sections = document.querySelectorAll('main section');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const target = button.getAttribute('data-target');
+                sections.forEach(section => {
+                    section.classList.toggle('active', section.id === target);
+                });
+            });
+        });
+
+        // MTC frontend -> backend mesajı göndermek için fonksiyon
+        function sendToBackend(message) {
             if (window.mtc && mtc.trigger) {
-                mtc.trigger('FrontendToBackend', 'Merhaba backend!');
+                mtc.trigger('FrontendToBackend', message);
             } else {
                 console.log('MTC trigger fonksiyonu bulunamadı.');
             }
-        });
+        }
+
+        // Örnek: 3 saniyede bir backend'e ping gönder
+        setInterval(() => {
+            sendToBackend('Ping from frontend at ' + new Date().toLocaleTimeString());
+        }, 3000);
     </script>
 </body>
 </html>

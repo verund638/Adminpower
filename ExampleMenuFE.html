@@ -1,42 +1,22 @@
-MTC.Xjs([[
-    const messages = [
-        {text: 'Selam', msg: 'selam'},
-        {text: 'Aleyküm', msg: 'aleyküm'},
-        {text: 'Naber', msg: 'naber'},
-        {text: 'Hoşgeldin', msg: 'hoşgeldin'}
-    ];
-
-    const container = document.createElement('div');
-    container.style = `
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        z-index: 9999;
-    `;
-    document.body.appendChild(container);
-
-    messages.forEach(({text, msg}) => {
-        const btn = document.createElement('button');
-        btn.textContent = text;
-        btn.style = `
-            background-color: #f44336;
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(244, 67, 54, 0.7);
-        `;
-        btn.addEventListener('click', () => {
-            if(window.mtc && typeof mtc.trigger === 'function'){
-                mtc.trigger('FrontendToBackend', msg);
-                console.log('Lua\'ya mesaj gönderildi: ' + msg);
-            }
-        });
-        container.appendChild(btn);
-    });
-]])
+const newBtn = document.createElement('button');
+newBtn.textContent = 'Hello Gönder';
+newBtn.style = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(244, 67, 54, 0.7);
+    z-index: 9999;
+`;
+document.body.appendChild(newBtn);
+newBtn.addEventListener('click', () => {
+    if(window.mtc && typeof mtc.trigger === 'function'){
+        mtc.trigger('FrontendToBackend', 'hello');
+    }
+});

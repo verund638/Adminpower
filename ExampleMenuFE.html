@@ -1,42 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #333;
-            color: #fff;
-        }
-
-        h1 {
-            text-align: center;
-            padding: 20px;
-            background-color: #444;
-            margin: 0;
-        }
-
-        button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #555;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
+<meta charset="UTF-8" />
+<title>Example MTC UI</title>
 </head>
-
 <body>
-    <h1>Example Menu FE</h1>
+    <h1>Orjinal Başlık</h1>
+    <button id="sendBtn">Backend'e Mesaj Gönder</button>
 
-    <button onclick="TriggerEvent('AnEvent', '1', '2', '3')">Trigger AnEvent</button>
-
+    <script>
+        // MTC executor frontend için örnek event göndermek
+        document.getElementById('sendBtn').addEventListener('click', function() {
+            if (window.mtc && mtc.trigger) {
+                mtc.trigger('FrontendToBackend', 'Merhaba backend!');
+            } else {
+                console.log('MTC trigger fonksiyonu bulunamadı.');
+            }
+        });
+    </script>
 </body>
-
 </html>

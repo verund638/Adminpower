@@ -4,44 +4,51 @@
   <meta charset="UTF-8">
   <title>ESP Menü</title>
 </head>
-<body style="background-color: #0f0f0f; color: white; font-family: sans-serif; text-align:center; padding-top:30px;">
+<body style="background:#121212; color:white; font-family:sans-serif; text-align:center; padding:30px;">
 
-  <h1>MTC ESP MENÜ</h1>
-  <button id="espBtn">ESP ID GÖSTER</button>
+  <h1>🛰️ Oyuncu ID ESP</h1>
+  <button id="espBtn">Tüm Oyuncu ID’lerini Göster</button>
 
-  <p id="result" style="margin-top:30px; font-size:20px; color:#00ffea;"></p>
+  <ul id="espList" style="margin-top:30px; font-size:18px; list-style:none; padding:0;"></ul>
 
   <script>
     document.getElementById("espBtn").addEventListener("click", () => {
-      if (window.mtc && typeof window.mtc.trigger === 'function') {
-        mtc.trigger("FrontendToBackend", "get_esp_id");
-        console.log("ESP ID isteği gönderildi.");
+      if (window.mtc && typeof window.mtc.trigger === "function") {
+        mtc.trigger("FrontendToBackend", "get_all_ids");
+        console.log("Lua'ya ID isteği gönderildi.");
       } else {
-        console.warn("mtc.trigger fonksiyonu tanımlı değil.");
+        console.warn("mtc.trigger tanımlı değil.");
       }
     });
 
-    // Lua'dan geri gelen cevap
     window.addEventListener("message", (event) => {
-      if (event.data.type === "esp_id_response") {
-        document.getElementById("result").textContent = "Senin Oyuncu ID: " + event.data.playerId;
-        console.log("ID alındı:", event.data.playerId);
+      if (event.data.type === "esp_id_list") {
+        const list = event.data.ids;
+        const espList = document.getElementById("espList");
+        espList.innerHTML = "";
+
+        list.forEach(id => {
+          const li = document.createElement("li");
+          li.textContent = `Oyuncu ID: ${id}`;
+          li.style.margin = "6px";
+          espList.appendChild(li);
+        });
       }
     });
   </script>
 
   <style>
     button {
-      padding: 14px 28px;
-      font-size: 18px;
-      background: #3498db;
-      border: none;
-      border-radius: 10px;
+      padding: 12px 24px;
+      font-size: 16px;
+      background: #00adb5;
       color: white;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
     }
     button:hover {
-      background: #2980b9;
+      background: #008691;
     }
   </style>
 

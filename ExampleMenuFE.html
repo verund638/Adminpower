@@ -1,50 +1,65 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MTC Menü</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background-color: #0a0a0a;
-            color: #fff;
             font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
         }
-        h1 {
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        button {
-            padding: 12px 24px;
-            background-color: #e60000;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #b50000;
+        #menu {
+            display: none;
         }
     </style>
 </head>
-<body>
-    <h1>MTC Menü Sistemi</h1>
-    <div class="button-container">
-        <button onclick="mtc.trigger('SendHelloWorld')">Sunucuya Hello World Gönder</button>
-        <button onclick="mtc.trigger('ToggleIDESP')">ID ESP Aç / Kapat</button>
+<body class="bg-gray-900 text-white">
+    <div id="menu" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold mb-4 text-center">MTC Menü</h1>
+        <div class="flex flex-col space-y-4">
+            <button id="helloWorldBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Sunucuya Hello World Gönder
+            </button>
+            <button id="toggleEspBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                ID ESP Aç/Kapat
+            </button>
+        </div>
     </div>
+
+    <script>
+        // Handle NUI messages
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'setVisible') {
+                document.getElementById('menu').style.display = event.data.visible ? 'block' : 'none';
+            }
+        });
+
+        // Send Hello World to server
+        document.getElementById('helloWorldBtn').addEventListener('click', function() {
+            fetch(`https://${GetParentResourceName()}/SendHelloWorld`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            })
+            .then(resp => resp.json())
+            .then(resp => console.log('Hello World Response:', resp));
+        });
+
+        // Toggle ID ESP
+        document.getElementById('toggleEspBtn').addEventListener('click', function() {
+            fetch(`https://${GetParentResourceName()}/ToggleIDESP`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            })
+            .then(resp => resp.json())
+            .then(resp => {
+                console.log('Toggle ID ESP Response:', resp);
+                document.getElementById('toggleEspBtn').textContent = 
+                    resp.espEnabled ? 'ID ESP Kapat' : 'ID ESP Aç';
+            });
+        });
+    </script>
 </body>
 </html>

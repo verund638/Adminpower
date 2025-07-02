@@ -1,39 +1,14 @@
--- MTC API kontrolü
-if not MTC then
-    print("[MTC] API tanımlı değil!")
-    return
-end
-
-print("MTC API aktif: " .. tostring(MTC.CL))
-
-local espEnabled = false
-
--- HTML içinden gelen trigger'ları yakala
-RegisterNUICallback("SendHelloWorld", function(data, cb)
-    print("[MTC] Hello World butonu tetiklendi.")
-    -- Burada sunucuya erişim yoksa client işlemleri yapılabilir
-    cb({ status = "ok" })
-end)
-
-RegisterNUICallback("ToggleIDESP", function(data, cb)
-    espEnabled = not espEnabled
-    print("[MTC] ID ESP " .. (espEnabled and "Açıldı" or "Kapatıldı"))
-    cb({ status = "ok" })
-end)
-
--- Menü açma fonksiyonu
-local function openAdminMenu()
-    MTC.Xui("https://verund638.github.io/Adminpower/ExampleMenuFE.html")
-    Citizen.Wait(1000)
-    MTC.Ui(true) -- menüyü aç
-end
-
--- Örnek olarak F7 ile açalım
-Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(0)
-        if IsControlJustPressed(0, 168) then -- F7 tuşu
-            openAdminMenu()
-        end
-    end
-end)
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adminpower Menü</title>
+  <!-- CSS ve JS dosyaları -->
+</head>
+<body>
+  <h1>Adminpower</h1>
+  <button onclick="mtc.trigger('SendHelloWorld')">Send Hello World</button>
+  <button onclick="mtc.trigger('ToggleIDESP')">Toggle ID ESP</button>
+</body>
+</html>

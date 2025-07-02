@@ -3,103 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MTC Menu</title>
+    <title>MTC Menü</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
+            font-family: 'Arial', sans-serif;
+            background-color: rgba(0, 0, 0, 0.85);
+            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
             user-select: none;
         }
         .container {
-            background-color: rgba(50, 50, 50, 0.9);
+            background-color: rgba(30, 30, 30, 0.9);
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 8px;
             text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
         h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #1e90ff;
         }
         button {
             background-color: #1e90ff;
             border: none;
             padding: 10px 20px;
-            margin: 10px;
+            margin: 5px;
             border-radius: 5px;
             color: white;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease;
         }
         button:hover {
             background-color: #4682b4;
+        }
+        #status {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #d3d3d3;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>MTC Menu</h1>
-        <button onclick="sendHelloWorld()">Hello World</button>
+        <h1 id="menu-title">MTC Menü</h1>
+        <button onclick="sendHelloWorld()">Merhaba Dünya</button>
         <button onclick="toggleIDESP()">ID ESP Aç/Kapat</button>
+        <div id="status">Durum: Yükleniyor...</div>
     </div>
 
     <script>
-        // NUI mesajı gönderme fonksiyonu
+        // NUI mesajı gönderme
         function sendNUIMessage(eventName, data) {
-            fetch(`https://${GetParentResourceName()}/${eventName}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            }).then(resp => resp.json()).then(resp => {
-                console.log('NUI Response:', resp);
-            });
+            window.TriggerEvent(eventName, JSON.stringify(data));
         }
 
-        // SendHelloWorld callback'ini tetikle
+        // Hello World callback'ini tetikle
         function sendHelloWorld() {
             sendNUIMessage('SendHelloWorld', {});
-            // Alternatif olarak MTC JavaScript API ile TriggerEvent
-            window.TriggerEvent('SendHelloWorld', {});
+            document.getElementById('status').innerText = 'Durum: Merhaba Dünya gönderildi!';
         }
 
         // ToggleIDESP callback'ini tetikle
         function toggleIDESP() {
             sendNUIMessage('ToggleIDESP', {});
-            // Alternatif olarak MTC JavaScript API ile TriggerEvent
-            window.TriggerEvent('ToggleIDESP', {});
+            document.getElementById('status').innerText = 'Durum: ID ESP ' + (espEnabled ? 'kapatıldı' : 'açıldı');
+            espEnabled = !espEnabled; // Yerel durum takibi
         }
 
-        // NUI odaklama ve fare kontrolü
+        // NUI aç/kapa olayları
         window.addEventListener('message', function(event) {
             if (event.data.type === 'open') {
                 document.body.style.display = 'flex';
-                // Fareyi göster
                 window.focusNUI(true);
+                document.getElementById('status').innerText = 'Durum: Menü açıldı';
             } else if (event.data.type === 'close') {
                 document.body.style.display = 'none';
-                // Fareyi gizle
                 window.focusNUI(false);
+                document.getElementById('status').innerText = 'Durum: Menü kapandı';
             }
         });
 
-        // Sağ tıklama ile yenileme (MTC'nin whitescreen çözümü)
+        // Whitescreen için yenileme
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
             window.location.reload();
         });
-
-        // Delete tuşu ile yenileme
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Delete') {
                 window.location.reload();
             }
         });
+
+        // MTC.Xjs ile başlık güncellemesi için hazır
+        let espEnabled = false;
     </script>
 </body>
 </html>

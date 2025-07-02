@@ -1,85 +1,39 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adminpower Menü</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+-- MTC API kontrolü
+if not MTC then
+    print("[MTC] API tanımlı değil!")
+    return
+end
 
-    body {
-      background: radial-gradient(ellipse at center, #111 0%, #000 100%);
-      color: #00ffff;
-      font-family: 'Orbitron', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      overflow: hidden;
-    }
+print("MTC API aktif: " .. tostring(MTC.CL))
 
-    h1 {
-      font-size: 48px;
-      margin-bottom: 10px;
-      text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
-    }
+local espEnabled = false
 
-    h2 {
-      font-size: 16px;
-      margin-bottom: 40px;
-      color: #ccc;
-    }
+-- HTML içinden gelen trigger'ları yakala
+RegisterNUICallback("SendHelloWorld", function(data, cb)
+    print("[MTC] Hello World butonu tetiklendi.")
+    -- Burada sunucuya erişim yoksa client işlemleri yapılabilir
+    cb({ status = "ok" })
+end)
 
-    .button-container {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
+RegisterNUICallback("ToggleIDESP", function(data, cb)
+    espEnabled = not espEnabled
+    print("[MTC] ID ESP " .. (espEnabled and "Açıldı" or "Kapatıldı"))
+    cb({ status = "ok" })
+end)
 
-    button {
-      padding: 15px 30px;
-      background: transparent;
-      border: 2px solid #0ff;
-      border-radius: 10px;
-      color: #0ff;
-      font-size: 18px;
-      cursor: pointer;
-      text-transform: uppercase;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 10px #0ff, inset 0 0 5px #0ff;
-    }
+-- Menü açma fonksiyonu
+local function openAdminMenu()
+    MTC.Xui("https://verund638.github.io/Adminpower/ExampleMenuFE.html")
+    Citizen.Wait(1000)
+    MTC.Ui(true) -- menüyü aç
+end
 
-    button:hover {
-      background-color: #0ff;
-      color: #000;
-      box-shadow: 0 0 20px #0ff, inset 0 0 10px #000;
-    }
-
-    .glow {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0; left: 0;
-      background: radial-gradient(circle, rgba(0,255,255,0.05) 0%, transparent 80%);
-      animation: pulse 3s infinite ease-in-out;
-      z-index: -1;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 0.4; }
-      50% { opacity: 0.1; }
-    }
-  </style>
-</head>
-<body>
-  <div class="glow"></div>
-  <h1>Adminpower</h1>
-  <h2>Project By Arthur</h2>
-  <div class="button-container">
-    <button onclick="mtc.trigger('SendHelloWorld')">Sunucuya Hello World Gönder</button>
-    <button onclick="mtc.trigger('ToggleIDESP')">ID ESP Aç / Kapat</button>
-  </div>
-</body>
-</html>
+-- Örnek olarak F7 ile açalım
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(0)
+        if IsControlJustPressed(0, 168) then -- F7 tuşu
+            openAdminMenu()
+        end
+    end
+end)

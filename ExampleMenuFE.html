@@ -1,12 +1,14 @@
+
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MTC Menü</title>
     <style>
         body {
-            background-color: #000;
+            background-color: #0a0a0a;
             color: #fff;
             font-family: Arial, sans-serif;
             display: flex;
@@ -17,23 +19,34 @@
             margin: 0;
         }
         h1 {
-            margin-bottom: 30px;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
         button {
-            margin: 10px;
-            padding: 10px 20px;
+            padding: 12px 24px;
             background-color: #e60000;
-            border: none;
-            border-radius: 5px;
             color: white;
+            border: none;
+            border-radius: 6px;
             font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #b50000;
         }
     </style>
 </head>
 <body>
-    <h1>MTC Menü</h1>
-    <button onclick="mtc.trigger('SendHelloWorld')">Sunucuya Hello World Gönder</button>
-    <button onclick="mtc.trigger('ToggleIDESP')">ID ESP Aç/Kapat</button>
+    <h1>MTC Menü Sistemi</h1>
+    <div class="button-container">
+        <button onclick="mtc.trigger('SendHelloWorld')">Sunucuya Hello World Gönder</button>
+        <button onclick="mtc.trigger('ToggleIDESP')">ID ESP Aç / Kapat</button>
+    </div>
 </body>
 </html>
